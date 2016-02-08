@@ -26,7 +26,7 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1. 
+1. Is it safe to push your API Key and Secret onto source control? It's publicly visible... what implications might that carry?
 2. 
 
 ## Video Walkthrough 
