@@ -31,11 +31,10 @@ class ViewController: UIViewController {
 //            
 //        }
         
-        
         TwitterClient.sharedInstance.loginWithCompletion() {
             (user: User?, error: NSError?) in
             if user != nil {
-                // segue
+                self.performSegueWithIdentifier("loginSegue", sender: self);
             } else {
                 // handle error
             }
