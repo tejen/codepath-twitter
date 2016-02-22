@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Twitter
 //
-//  Created by Tejen Hasmukh Patel on 2/7/16.
+//  Created by Tejen Hasmukh Patel on 2/19/16.
 //  Copyright © 2016 Tejen. All rights reserved.
 //
 
@@ -13,27 +13,11 @@ import BDBOAuth1Manager
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var storyboard = UIStoryboard(name: "Main", bundle: nil);
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLoginNotification, object: nil);
-        
-        if User.currentUser != nil {
-            // Go to the Logged In screen
-            print("Current user detected: \(User.currentUser?.name)");
-            let vc = storyboard.instantiateViewControllerWithIdentifier("TweetsViewController") as UIViewController;
-            window?.rootViewController = vc;
-            
-        }
-        
+        UIApplication.sharedApplication().statusBarStyle = .LightContent;
         return true
-    }
-    
-    func userDidLogout() {
-        let vc = storyboard.instantiateInitialViewController();
-        window?.rootViewController = vc;
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -58,9 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         
-        TwitterClient.sharedInstance.openURL(url);
+        TwitterClient.sharedInstance.handleOpenUrl(url);
         
         return true;
     }

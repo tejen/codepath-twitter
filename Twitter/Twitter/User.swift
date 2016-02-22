@@ -2,51 +2,48 @@
 //  User.swift
 //  Twitter
 //
-//  Created by Tejen Hasmukh Patel on 2/7/16.
+//  Created by Tejen Hasmukh Patel on 2/19/16.
 //  Copyright © 2016 Tejen. All rights reserved.
 //
 
 import UIKit
 
-var _currentUser: User?
-let currentUserKey = "kCuurentUserKey";
-let userDidLoginNotification = "userDidLoginNotification";
-let userDidLogoutNotification = "userDidLogoutNotification";
-
 class User: NSObject {
-    var name: String?;
-    var screenname: String?;
-    var profileImageUrl: String?;
-    var tagline: String?;
-    var dictionary: NSDictionary;
+    
+    static let userDidLogoutNotification = "UserDidLogout";
+    
+    var name: NSString?;
+    var screenname: NSString?;
+    var profileUrl: NSURL?;
+    var tagline: NSString?;
+    
+    var dictionary: NSDictionary?;
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary;
         
         name = dictionary["name"] as? String;
         screenname = dictionary["screen_name"] as? String;
-        profileImageUrl = dictionary["profile_image_url"] as? String;
+        
+        let profileUrlString = dictionary["profile_image_url_https"] as? String;
+        if let profileUrlString = profileUrlString {
+            profileUrl = NSURL(string: profileUrlString);
+        }
+        
         tagline = dictionary["description"] as? String;
     }
     
-    func logout() {
-        User.currentUser = nil;
-        TwitterClient.sharedInstance.requestSerializer.removeAccessToken();
-        
-        NSNotificationCenter.defaultCenter().postNotificationName(userDidLogoutNotification, object: nil);
-    }
+    static var _currentUser: User?;
     
     class var currentUser: User? {
         get {
-            if _currentUser == nil {
-            let data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as? NSData;
-                if data != nil {
-                    do {
-                        let dictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions());
-                        _currentUser = User(dictionary: dictionary as! NSDictionary);
-                    } catch _ {
-        
-                    }
+            if(_currentUser == nil) {
+                let defaults = NSUserDefaults.standardUserDefaults();
+                let userData = defaults.objectForKey("currentUser") as? NSData;
+            
+                if let userData = userData {
+                    let dictionary = try! NSJSONSerialization.JSONObjectWithData(userData, options: []) as! NSDictionary;
+                    _currentUser = User(dictionary: dictionary);
                 }
             }
             return _currentUser;
@@ -54,17 +51,17 @@ class User: NSObject {
         set(user) {
             _currentUser = user;
             
-            if _currentUser != nil {
-                do {
-                    let data = try NSJSONSerialization.dataWithJSONObject(user!.dictionary, options: NSJSONWritingOptions());
-                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey);
-                } catch _ {
-                    
-                }
+            let defaults = NSUserDefaults.standardUserDefaults();
+            
+            if let user = user {
+                let data = try! NSJSONSerialization.dataWithJSONObject(user.dictionary!, options: []);
+                defaults.setObject(data, forKey: "currentUser");
             } else {
-                NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey);
+                defaults.setObject(nil, forKey: "currentUser");
             }
-            NSUserDefaults.standardUserDefaults().synchronize();
+            
+            defaults.synchronize();
         }
     }
+    
 }
