@@ -47,8 +47,9 @@ class TweetCell: UITableViewCell {
             let urls = tweet.urls;
             let media = tweet.media;
             
-            retweetCountLabel.text = String(tweet.retweetCount) ?? "";
-            favoriteCountLabel.text = String(tweet.favoritesCount) ?? "";
+            retweetCountLabel.text = tweet.retweetCount > 0 ? String(tweet.retweetCount) : "";
+            
+            favoriteCountLabel.text = tweet.favoritesCount > 0 ? String(tweet.favoritesCount) : "";
             
             retweetButton.selected = tweet.retweeted;
             favoriteButton.selected = tweet.favorited;

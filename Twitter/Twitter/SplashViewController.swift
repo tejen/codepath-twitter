@@ -8,15 +8,18 @@
 
 import UIKit
 
-class SplashViewController: UIViewController {
+class SplashViewController: UIViewController, TwitterLoginLoungeDelegate {
 
     @IBOutlet var LogoHeightOriginalConstraint: NSLayoutConstraint!
     @IBOutlet var LogoHeightLargeConstraint: NSLayoutConstraint!
+    
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        TwitterClient.sharedInstance.delegate = self;
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,11 +35,9 @@ class SplashViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         
-        delay(1.0) { () -> () in
-            if(User.currentUser == nil) {
-                self.goToLogin();
-            } else {
-                self.continueToApp();
+        if(!appDelegate.splashInterludePersist) {
+            delay(1.0) { () -> () in
+                self.continueLogin();
             }
         }
     }
@@ -53,6 +54,15 @@ class SplashViewController: UIViewController {
             self.view.layoutIfNeeded();
         }
         self.performSegueWithIdentifier("toTabbedView", sender: self);
+    }
+    
+    func continueLogin() {
+        appDelegate.splashInterludePersist = false;
+        if(User.currentUser == nil) {
+            self.goToLogin();
+        } else {
+            self.continueToApp();
+        }
     }
 
     /*

@@ -34,6 +34,10 @@ class LoginViewController: UIViewController {
         
         UIApplication.sharedApplication().statusBarStyle = .LightContent;
 
+        NSNotificationCenter.defaultCenter().addObserverForName("ReturnToSplash", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil);
+        };
+        
     }
 
     override func didReceiveMemoryWarning() {

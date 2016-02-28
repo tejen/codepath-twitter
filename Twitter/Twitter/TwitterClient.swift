@@ -16,6 +16,8 @@ class TwitterClient: BDBOAuth1SessionManager {
     var loginSuccess: (() -> ())?;
     var loginFailure: ((NSError) -> ())?;
     
+    weak var delegate: TwitterLoginLoungeDelegate?;
+    
     func login(success: () -> (), failure: (NSError) -> ()){
         loginSuccess = success;
         loginFailure = failure;
@@ -41,12 +43,16 @@ class TwitterClient: BDBOAuth1SessionManager {
     }
     
     func handleOpenUrl(url: NSURL) {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+        appDelegate.splashInterludePersist = true;
+        
         let requestToken = BDBOAuth1Credential(queryString: url.query);
         
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential!) -> Void in
             self.currentAccount({ (user: User) -> () in
                     User.currentUser = user;
                     self.loginSuccess?();
+                    self.delegate?.continueLogin();
                 }, failure: { (error: NSError) -> () in
                     self.loginFailure?(error);
             });
@@ -82,7 +88,9 @@ class TwitterClient: BDBOAuth1SessionManager {
             params["max_id"] = maxId;
         }
         
-        GET("https://tejen.net/sub/codepath/twitter/#1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        // dummy api to overcome rate limit problems:
+            // https://tejen.net/sub/codepath/twitter/#
+        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
