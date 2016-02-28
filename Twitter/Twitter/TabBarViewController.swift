@@ -15,7 +15,7 @@ class TabBarViewController: UITabBarController {
 
         // Do any additional setup after loading the view.
         NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-            self.performSegueWithIdentifier("toLogin", sender: self);
+            self.dismissViewControllerAnimated(true, completion: nil);
         };
         
     }

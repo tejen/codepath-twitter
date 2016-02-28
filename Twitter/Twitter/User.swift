@@ -12,23 +12,40 @@ class User: NSObject {
     
     static let userDidLogoutNotification = "UserDidLogout";
     
+    var id: Int?;
+    
     var name: NSString?;
     var screenname: NSString?;
     var profileUrl: NSURL?;
     var tagline: NSString?;
+    var backgroundImageURL: String?;
+    
+    var followersCount: Int?;
+    var followingCount: Int?;
+    
+    var locationString: NSString?;
+    var protected: Bool?;
     
     var dictionary: NSDictionary?;
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary;
         
+        id = dictionary["id"] as? Int;
+        
         name = dictionary["name"] as? String;
         screenname = dictionary["screen_name"] as? String;
         
+        backgroundImageURL = dictionary["profile_background_image_url_https"] as? String;
         let profileUrlString = dictionary["profile_image_url_https"] as? String;
-        if let profileUrlString = profileUrlString {
-            profileUrl = NSURL(string: profileUrlString);
-        }
+        profileUrl = NSURL(string: profileUrlString!.replace("normal.png", withString: "bigger.png"));
+        
+        followersCount = dictionary["followers_count"] as? Int;
+        followingCount = dictionary["friends_count"] as? Int;
+        
+        locationString = dictionary["location"] as? String;
+        
+        protected = dictionary["protected"] as? Bool;
         
         tagline = dictionary["description"] as? String;
     }

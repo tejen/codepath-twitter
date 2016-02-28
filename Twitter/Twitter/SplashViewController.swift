@@ -24,15 +24,20 @@ class SplashViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        LogoHeightLargeConstraint.active = false;
+        LogoHeightOriginalConstraint.active = true;
+    }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         
-        if(User.currentUser == nil) {
-            print("Not yet logged in");
-            goToLogin();
-        } else {
-            print("Logged in");
-            continueToApp();
+        delay(1.0) { () -> () in
+            if(User.currentUser == nil) {
+                self.goToLogin();
+            } else {
+                self.continueToApp();
+            }
         }
     }
     
@@ -46,7 +51,6 @@ class SplashViewController: UIViewController {
         
         UIView.animateWithDuration(0.5) {
             self.view.layoutIfNeeded();
-            
         }
         self.performSegueWithIdentifier("toTabbedView", sender: self);
     }

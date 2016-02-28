@@ -76,8 +76,13 @@ class TwitterClient: BDBOAuth1SessionManager {
         });
     }
     
-    func homeTimeline(success: ([Tweet]) -> (), failure: (NSError) -> ()) {
-        GET("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+    func homeTimeline(maxId: Int? = nil, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        var params = ["count": 10];
+        if(maxId != nil) {
+            params["max_id"] = maxId;
+        }
+        
+        GET("https://tejen.net/sub/codepath/twitter/#1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
@@ -88,4 +93,43 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func myTweets(maxId: Int? = nil, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        var params = ["count": 10];
+        params["user_id"] = User.currentUser?.id!;
+        if(maxId != nil) {
+            params["max_id"] = maxId;
+        }
+        
+        GET("1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let dictionaries = response as! [NSDictionary];
+            let tweets = Tweet.tweetsWithArray(dictionaries);
+            
+            success(tweets)
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error);
+        })
+    }
+    
+    func favorite(params: NSDictionary?, favorite: Bool, completion: (tweet: Tweet?, error: NSError?) -> (Void)={_,_ in }) {
+        let endpoint = favorite ? "create" : "destroy";
+        POST("1.1/favorites/\(endpoint).json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+                let tweet = Tweet(dictionary: response as! NSDictionary);
+                completion(tweet: tweet, error: nil);
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                completion(tweet: nil, error: error);
+        }
+    }
+    
+    func retweet(params: NSDictionary?, retweet: Bool, completion: (tweet: Tweet?, error: NSError?) -> (Void)={_,_ in }) {
+        let tweetID = params!["id"] as! Int;
+        let endpoint = retweet ? "retweet" : "unretweet";
+        POST("1.1/statuses/\(endpoint)/\(tweetID).json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let tweet = Tweet(dictionary: response as! NSDictionary);
+            completion(tweet: tweet, error: nil);
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                completion(tweet: nil, error: error);
+        }
+    }
+
 }

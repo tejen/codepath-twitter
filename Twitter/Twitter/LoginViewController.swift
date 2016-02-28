@@ -42,8 +42,6 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction func onLoginButton(sender: AnyObject) {
-
-
         TwitterClient.sharedInstance.login({ () -> () in
             print("Logged in");
             self.dismissViewControllerAnimated(true) { () -> Void in
@@ -72,7 +70,6 @@ class LoginViewController: UIViewController {
             self.ButtonContainerView.frame = CGRectOffset(self.ButtonContainerView.frame, 0, -20);
             self.WelcomeLabel.frame = CGRectOffset(self.WelcomeLabel.frame, 0, -20);
             self.SubtitleLabel.frame = CGRectOffset(self.SubtitleLabel.frame, 0, -20);
-            
         }
         
     }
