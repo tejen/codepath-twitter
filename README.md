@@ -24,6 +24,7 @@ The following **additional** features are implemented:
 
 - [X] Favorite/retweet buttons are animated for added visual feedback.
 - [X] Animations **precisely mimic the real Twitter app! (especially during login/logout)**
+- [X] **UI Action Sheet** for Sign Out button.
 - [X] App Icon resembles real Twitter app.
 - [X] Launch Screen (and it's follow-up animations) mimics the real Twitter app.
 
@@ -74,16 +75,16 @@ Time spent: **2** hours spent in total
 
 The following **required** functionality is completed:
 
-- [ ] Tweet Details Page: User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
+- [X] Tweet Details Page: User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
 - [X] Profile page:
    - [X] Contains the user header view
    - [X] Contains a section with the users basic stats: # tweets, # following, # followers
 - [ ] Home Timeline: Tapping on a user image should bring up that user's profile page
-- [ ] Compose Page: User can compose a new tweet by tapping on a compose button.
+- [X] Compose Page: User can compose a new tweet by tapping on a compose button.
 
 The following **optional** features are implemented:
 
-- [ ] When composing, you should have a countdown in the upper right for the tweet limit.
+- [X] When composing, you should have a countdown in the upper right for the tweet limit.
 - [ ] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
 - [ ] Profile Page
    - [ ] Implement the paging view for the user description.
