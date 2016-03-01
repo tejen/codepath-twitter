@@ -82,7 +82,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var reloadedIndexPaths = [Int]();
     
-    func reloadTableCellAtIndex(cell: TweetCell, indexPath: NSIndexPath) {
+    func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath) {
         if(reloadedIndexPaths.indexOf(indexPath.row) == nil) {
             reloadedIndexPaths.append(indexPath.row);
             try! tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic);
@@ -129,14 +129,19 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if(segue.identifier == "toDetails") {
+            let backItem = UIBarButtonItem();
+            backItem.title = "";
+            navigationItem.backBarButtonItem = backItem;
+
+            let cell = sender as! UITableViewCell;
+            let indexPath = tableView.indexPathForCell(cell);
+            let tweet = tweets![indexPath!.row];
+            let detailViewController = segue.destinationViewController as! DetailsViewController;
+            detailViewController.tweet = tweet;
+            self.navigationController?.navigationBarHidden = false;
+        }
     }
-    */
 
 }

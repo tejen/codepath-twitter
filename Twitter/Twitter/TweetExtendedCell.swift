@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetCell: UITableViewCell {
+class TweetExtendedCell: UITableViewCell {
     
     @IBOutlet var authorNameLabel: UILabel!
     @IBOutlet var authorScreennameLabel: UILabel!
@@ -43,14 +43,14 @@ class TweetCell: UITableViewCell {
             authorScreennameLabel.text = "@" + (tweet.screenname as! String);
             
             tweetContentsLabel.text = tweet.text as? String;
-            tweetAgeLabel.text = Tweet.timeSince(tweet.timestamp!);
+            tweetAgeLabel.text = Tweet.localizedTimestamp(tweet.timestamp!);
             
             let urls = tweet.urls;
             let media = tweet.media;
             
-            retweetCountLabel.text = tweet.retweetCount > 0 ? String(tweet.retweetCount) : "";
+            retweetCountLabel.text = String(tweet.retweetCount);
             
-            favoriteCountLabel.text = tweet.favoritesCount > 0 ? String(tweet.favoritesCount) : "";
+            favoriteCountLabel.text = String(tweet.favoritesCount);
             
             retweetButton.selected = tweet.retweeted;
             favoriteButton.selected = tweet.favorited;
@@ -74,18 +74,18 @@ class TweetCell: UITableViewCell {
                     let urltext = medium["url"] as! String;
                     tweetContentsLabel.text = tweetContentsLabel.text?.replace(urltext, withString: "");
                     if((medium["type"] as? String) == "photo") {
-                        mediaImageVerticalSpacingConstraint.constant = 8;
+                        mediaImageVerticalSpacingConstraint.constant = 16;
                         let mediaurl = medium["media_url_https"] as! String;
-                        mediaImageView.hidden = false;
+                        mediaImageView.alpha = 1;
                         
                         mediaImageHeightConstraint.active = false;
                         
                         mediaImageView.layer.cornerRadius = 5;
                         mediaImageView.clipsToBounds = true;
                         mediaImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: mediaurl)!), placeholderImage: nil, success: { (r: NSURLRequest, u: NSHTTPURLResponse?, i: UIImage) -> Void in
-                                // success
-                                self.mediaImageView.image = i;
-                                self.delegate?.reloadTableCellAtIndex(self, indexPath: self.indexPath);
+                            // success
+                            self.mediaImageView.image = i;
+                            self.delegate?.reloadTableCellAtIndex(self, indexPath: self.indexPath);
                             }, failure: { (r: NSURLRequest, u: NSHTTPURLResponse?, e: NSError) -> Void in
                                 // error
                         });
@@ -95,14 +95,14 @@ class TweetCell: UITableViewCell {
             
             if(displayUrls.count > 0){
                 let content = tweetContentsLabel.text ?? "";
-
+                
                 let urlText = " " + displayUrls.joinWithSeparator(" ");
                 
                 let text = NSMutableAttributedString(string: content);
-                text.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15.0), range: NSRange(location: 0, length: content.characters.count));
+                text.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(20.0, weight: UIFontWeightLight), range: NSRange(location: 0, length: content.characters.count));
                 
                 let links = NSMutableAttributedString(string: urlText);
-                links.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15.0), range: NSRange(location: 0, length: urlText.characters.count));
+                links.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(20.0, weight: UIFontWeightLight), range: NSRange(location: 0, length: urlText.characters.count));
                 links.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 36/255.0, green: 144/255.0, blue: 212/255.0, alpha: 1), range: NSRange(location: 0, length: urlText.characters.count));
                 
                 text.appendAttributedString(links);
@@ -116,15 +116,15 @@ class TweetCell: UITableViewCell {
             }
         }
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -161,5 +161,5 @@ class TweetCell: UITableViewCell {
             favoriteCountLabel.text = String(tweet.favoritesCount) ?? "";
         }
     }
-
+    
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 class Tweet: NSObject {
-    var TweetID: NSNumber;
+    var TweetID: NSNumber!;
     var screenname: NSString?;
     var author: NSString?;
     var authorProfilePicURL: NSURL?;
@@ -21,6 +21,9 @@ class Tweet: NSObject {
     var timestamp: NSDate?;
     var retweetCount: Int = 0;
     var favoritesCount: Int = 0;
+    
+    var precedingTweetID: Int?;
+    var precedingTweet: Tweet?;
     
     var favorited: Bool {
         didSet {
@@ -52,6 +55,7 @@ class Tweet: NSObject {
     init(dictionary: NSDictionary) {
         
         TweetID = dictionary["id"] as! NSNumber;
+        precedingTweetID = dictionary["in_reply_to_status_id"] as? Int;
         
         urls = dictionary["entities"]?["urls"] as? [NSDictionary];
         media = dictionary["entities"]?["media"] as? [NSDictionary];
@@ -143,6 +147,16 @@ class Tweet: NSObject {
         formatter.dateFormat = "d/yy";
         unit += formatter.stringFromDate(date);
         return (unit, timeSince);
+    }
+    
+    class func localizedTimestamp(date: NSDate) -> String {
+        let (unit, timeSince) = localizedDate(date);
+        let value = Int(timeSince);
+        var l18n = "\(value)\(unit), ";
+        let formatter = NSDateFormatter();
+        formatter.dateFormat = "h:m a";
+        l18n += formatter.stringFromDate(date);
+        return l18n;
     }
     
 }

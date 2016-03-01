@@ -13,16 +13,20 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     @IBOutlet var backgroundImageView: UIImageView!
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var profileImageSuperview: UIView!
+    @IBOutlet var nameLabel: UILabel!
     @IBOutlet var screennameLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!
     
     @IBOutlet var followingCountLabel: UILabel!
     @IBOutlet var followersCountLabel: UILabel!
     
+    @IBOutlet var imageLockIcon: UIImageView!
     @IBOutlet var imageCogIcon: UIImageView!
     
     @IBOutlet var shadowEffectView: UIView!
     @IBOutlet var tableView: UITableView!
+    
+    var user: User!;
     
     var refreshControl: UIRefreshControl!;
     var isMoreDataLoading = false;
@@ -43,15 +47,25 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
 
         // Do any additional setup after loading the view.
         
-        let profileImageUrl = User.currentUser?.profileUrl;
-        let backgroundImageUrl = User.currentUser?.backgroundImageURL;
+        if(user == nil) {
+            user = User.currentUser!;
+        }
         
-        let name = User.currentUser?.name;
-        let screenname = User.currentUser?.screenname;
-        let protected = User.currentUser?.protected;
-        let location = User.currentUser?.locationString;
-        let followingCount = User.currentUser?.followingCount;
-        let followersCount = User.currentUser?.followersCount;
+        let profileImageUrl = user.profileUrl;
+        let backgroundImageUrl = user.backgroundImageURL;
+        
+        let name = user.name;
+        let screenname = user.screenname;
+        let protected = user.protected;
+        let location = user.locationString;
+        let followingCount = user.followingCount;
+        let followersCount = user.followersCount;
+        
+        if(protected == nil) {
+            imageLockIcon.hidden = true;
+        }
+        
+        nameLabel.text = String(name!);
         
         profileImageView.setImageWithURL(profileImageUrl!);
         backgroundImageView.setImageWithURL(NSURL(string: backgroundImageUrl!)!);
@@ -62,8 +76,8 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         screennameLabel.text = "@" + String(screenname!);
         locationLabel.text = String(location!);
         
-        followersCountLabel.text = shortenNumber(823900000);
-        followingCountLabel.text = shortenNumber(2240);
+        followersCountLabel.text = shortenNumber(Double(followersCount!));
+        followingCountLabel.text = shortenNumber(Double(followingCount!));
         
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("profileCogMenu"));
         imageCogIcon.userInteractionEnabled = true;
@@ -90,14 +104,14 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         // Set up Pull To Refresh loading indicator
         refreshControl = UIRefreshControl();
         refreshControl.addTarget(self, action: "reloadData:", forControlEvents: UIControlEvents.ValueChanged);
-        refreshControl.layer.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1.0).CGColor as! CGColorRef;
+        refreshControl.layer.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1.0).CGColor as CGColorRef;
         tableView.insertSubview(refreshControl, atIndex: 0);
         
         // Set up Infinite Scroll loading indicator
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight);
         loadingMoreView = InfiniteScrollActivityView(frame: frame);
         loadingMoreView!.hidden = true;
-        loadingMoreView!.layer.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1.0).CGColor as! CGColorRef;
+        loadingMoreView!.layer.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1.0).CGColor as CGColorRef;
         tableView.addSubview(loadingMoreView!);
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
@@ -163,7 +177,7 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     
     var reloadedIndexPaths = [Int]();
     
-    func reloadTableCellAtIndex(cell: TweetCell, indexPath: NSIndexPath) {
+    func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath) {
         if(reloadedIndexPaths.indexOf(indexPath.row) == nil) {
             reloadedIndexPaths.append(indexPath.row);
             try! tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic);
@@ -192,7 +206,7 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
             lastTweetId = nil;
         }
         
-        TwitterClient.sharedInstance.myTweets(lastTweetId, success: completion, failure: { (error: NSError) -> () in
+        TwitterClient.sharedInstance.user_timeline(user, maxId: lastTweetId, success: completion, failure: { (error: NSError) -> () in
             print(error.localizedDescription);
         });
     }
@@ -212,14 +226,16 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if(segue.identifier == "toDetails") {
+            let cell = sender as! UITableViewCell;
+            let indexPath = tableView.indexPathForCell(cell);
+            let tweet = tweets![indexPath!.row];
+            let detailViewController = segue.destinationViewController as! DetailsViewController;
+            detailViewController.tweet = tweet;
+            detailViewController.closeNavBarOnDisappear = true;
+            self.navigationController?.navigationBarHidden = false;
+        }
     }
-    */
 
 }

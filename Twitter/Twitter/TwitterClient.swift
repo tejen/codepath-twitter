@@ -16,6 +16,9 @@ class TwitterClient: BDBOAuth1SessionManager {
     var loginSuccess: (() -> ())?;
     var loginFailure: ((NSError) -> ())?;
     
+    var buffer: Tweet?;
+    var bufferComplete: (() -> ())?;
+    
     weak var delegate: TwitterLoginLoungeDelegate?;
     
     func login(success: () -> (), failure: (NSError) -> ()){
@@ -90,7 +93,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         
         // dummy api to overcome rate limit problems:
             // https://tejen.net/sub/codepath/twitter/#
-        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        GET("https://tejen.net/sub/codepath/twitter/#1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
@@ -101,19 +104,18 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func myTweets(maxId: Int? = nil, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+    func user_timeline(user: User, maxId: Int? = nil, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
         var params = ["count": 10];
-        params["user_id"] = User.currentUser?.id!;
+        params["user_id"] = user.id!;
         if(maxId != nil) {
             params["max_id"] = maxId;
         }
         
         GET("1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            
-            let dictionaries = response as! [NSDictionary];
-            let tweets = Tweet.tweetsWithArray(dictionaries);
-            
-            success(tweets)
+                let dictionaries = response as! [NSDictionary];
+                let tweets = Tweet.tweetsWithArray(dictionaries);
+                
+                success(tweets)
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 failure(error);
         })
@@ -133,10 +135,57 @@ class TwitterClient: BDBOAuth1SessionManager {
         let tweetID = params!["id"] as! Int;
         let endpoint = retweet ? "retweet" : "unretweet";
         POST("1.1/statuses/\(endpoint)/\(tweetID).json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            let tweet = Tweet(dictionary: response as! NSDictionary);
-            completion(tweet: tweet, error: nil);
+                let tweet = Tweet(dictionary: response as! NSDictionary);
+                completion(tweet: tweet, error: nil);
             }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
                 completion(tweet: nil, error: error);
+        }
+    }
+    
+    func populateTweetByID(TweetID: Int, completion: (tweet: Tweet?, error: NSError?) -> (Void)={_,_ in }) {
+        GET("1.1/statuses/show.json?id=\(TweetID)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            let dictionary = response as! NSDictionary;
+            let tweet = Tweet(dictionary: dictionary);
+            
+            completion(tweet: tweet, error: nil);
+        }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+            completion(tweet: nil, error: error);
+        });
+    }
+    
+    func populatePreviousTweets(tweet: Tweet, completion: (()->())?) {
+        if(completion != nil) {
+            bufferComplete = completion;
+        }
+        print("populating previous tweet for: ");
+        print(tweet.TweetID);
+        if(tweet.precedingTweetID != nil) {
+            buffer = tweet;
+            populateTweetByID(tweet.precedingTweetID!, completion: { (tweet, error) -> (Void) in
+                self.buffer?.precedingTweet = tweet;
+                self.populatePreviousTweets(tweet!, completion: nil);
+            });
+        } else {
+            print("chain complete");
+            self.buffer = nil;
+            self.bufferComplete?();
+        }
+    }
+    
+    func publishTweet(text: String, replyToTweetID: Int = 0){
+        // Warning: this'll create a live tweet with the given text on behalf of the current user!
+        if(text == "") {
+            return;
+        }
+        var params = ["status": text];
+        if(replyToTweetID != 0) {
+            params["in_reply_to_status_id"] = String(replyToTweetID);
+            // @username of author of replyToTweetID must be included within new tweet text!
+        }
+        POST("1.1/statuses/update.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                
         }
     }
 

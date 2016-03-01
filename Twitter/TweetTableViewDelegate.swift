@@ -9,5 +9,5 @@
 import UIKit
 
 protocol TweetTableViewDelegate: class, UITableViewDelegate {
-    func reloadTableCellAtIndex(cell: TweetCell, indexPath: NSIndexPath);
+    func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath);
 }
