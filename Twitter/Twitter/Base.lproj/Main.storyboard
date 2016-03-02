@@ -71,8 +71,9 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Arti Patel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KIM-K2-QUj">
                                 <rect key="frame" x="99" y="87" width="123" height="21"/>
+                                <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="@23" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WF1-Jm-3tI">
@@ -929,7 +930,7 @@
         <!--Profile View Controller-->
         <scene sceneID="QKK-0w-ATV">
             <objects>
-                <viewController id="BEH-W1-g3d" customClass="ProfileViewController" customModule="Twitter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="BEH-W1-g3d" customClass="ProfileViewController" customModule="Twitter" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="s6a-DB-Bvn"/>
                         <viewControllerLayoutGuide type="bottom" id="w3L-O0-DRs"/>
@@ -1236,6 +1237,10 @@
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O6p-ss-ASf">
                                 <rect key="frame" x="0.0" y="281" width="600" height="10"/>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bb0-sl-zfo">
+                                <rect key="frame" x="455" y="132" width="87" height="30"/>
+                                <state key="normal" title="Back"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1245,6 +1250,7 @@
                             <constraint firstItem="M89-wd-g3c" firstAttribute="top" secondItem="aRc-1F-6O8" secondAttribute="bottom" constant="-25" id="3Bk-MG-7Q1"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="MP5-e3-54k" secondAttribute="trailing" constant="5" id="4er-sB-axN"/>
                             <constraint firstItem="w3L-O0-DRs" firstAttribute="top" secondItem="quC-l8-3ue" secondAttribute="bottom" id="53e-kA-8Gi"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Bb0-sl-zfo" secondAttribute="trailing" id="5QN-KW-xBv"/>
                             <constraint firstItem="MP5-e3-54k" firstAttribute="leading" secondItem="qba-Le-baV" secondAttribute="trailing" id="5wF-lq-N4g"/>
                             <constraint firstItem="fXV-9c-kMi" firstAttribute="centerY" secondItem="vhl-dx-BNT" secondAttribute="centerY" id="69A-6c-1It"/>
                             <constraint firstItem="O6p-ss-ASf" firstAttribute="leading" secondItem="Jhm-FE-5t3" secondAttribute="leading" id="97M-zz-fuQ"/>
@@ -1256,6 +1262,7 @@
                             <constraint firstItem="NGh-09-kOa" firstAttribute="centerY" secondItem="vES-Y0-R00" secondAttribute="centerY" id="H2M-Tc-Lsj"/>
                             <constraint firstItem="vES-Y0-R00" firstAttribute="leading" secondItem="TC1-yR-hgm" secondAttribute="leading" id="JBm-3E-HtQ"/>
                             <constraint firstItem="Tqz-Pl-uxD" firstAttribute="leading" secondItem="TC1-yR-hgm" secondAttribute="leading" constant="1" id="LMX-8v-0lh"/>
+                            <constraint firstItem="Bb0-sl-zfo" firstAttribute="top" secondItem="s6a-DB-Bvn" secondAttribute="bottom" constant="112" id="NTp-99-P2G"/>
                             <constraint firstItem="Tqz-Pl-uxD" firstAttribute="top" secondItem="TC1-yR-hgm" secondAttribute="bottom" constant="8" id="P3s-vB-dpc"/>
                             <constraint firstItem="quC-l8-3ue" firstAttribute="top" secondItem="vES-Y0-R00" secondAttribute="bottom" constant="9" id="TDc-K7-6l1"/>
                             <constraint firstItem="0Sh-ux-OVD" firstAttribute="centerY" secondItem="Tqz-Pl-uxD" secondAttribute="centerY" id="TiI-4X-amf"/>
@@ -1278,10 +1285,12 @@
                     <navigationItem key="navigationItem" id="KtE-AU-Nzy"/>
                     <connections>
                         <outlet property="backgroundImageView" destination="aRc-1F-6O8" id="j6q-KB-M8V"/>
+                        <outlet property="closeModalButton" destination="Bb0-sl-zfo" id="M34-b6-UXg"/>
                         <outlet property="followersCountLabel" destination="NGh-09-kOa" id="Tfi-ro-Jzx"/>
                         <outlet property="followingCountLabel" destination="vES-Y0-R00" id="yXw-WK-TtI"/>
                         <outlet property="imageCogIcon" destination="fXV-9c-kMi" id="lCV-ic-f8c"/>
                         <outlet property="imageLockIcon" destination="MP5-e3-54k" id="lqE-jd-irv"/>
+                        <outlet property="imageProfileOptions" destination="vhl-dx-BNT" id="iQW-Ng-hMQ"/>
                         <outlet property="locationLabel" destination="0Sh-ux-OVD" id="Nd8-6m-4y9"/>
                         <outlet property="nameLabel" destination="qba-Le-baV" id="N0h-kO-33P"/>
                         <outlet property="profileImageSuperview" destination="M89-wd-g3c" id="3yh-KY-8Uc"/>
@@ -1511,8 +1520,8 @@
         <image name="Sprites-Profile" width="163" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="owW-8A-i7n"/>
-        <segue reference="EeQ-nL-BV5"/>
+        <segue reference="TBv-jZ-J2l"/>
+        <segue reference="fhs-sZ-9wb"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.11372549019607843" green="0.63137254901960782" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
 </document>

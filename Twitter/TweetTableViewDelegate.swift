@@ -10,4 +10,6 @@ import UIKit
 
 protocol TweetTableViewDelegate: class, UITableViewDelegate {
     func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath);
+    
+    func openProfile(userScreenname: NSString);
 }

@@ -68,17 +68,9 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func currentAccount(success: (User) -> (), failure: (NSError) -> ()) {
         GET("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            
-            let userDictionary = response as! NSDictionary;
-            let user = User(dictionary: userDictionary);
-            
-            success(user);
-            
-            print(user.name);
-            print(user.screenname);
-            print(user.profileUrl);
-            print(user.tagline);
-            
+                let userDictionary = response as! NSDictionary;
+                let user = User(dictionary: userDictionary);
+                success(user);
             }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
                 print("error: \(error.localizedDescription)");
                 failure(error);
@@ -92,8 +84,8 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
         
         // dummy api to overcome rate limit problems:
-            // https://tejen.net/sub/codepath/twitter/#
-        GET("https://tejen.net/sub/codepath/twitter/#1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        // https://tejen.net/sub/codepath/twitter/#home_timeline.json
+        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
@@ -172,7 +164,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
-    func publishTweet(text: String, replyToTweetID: Int = 0){
+    func publishTweet(text: String, replyToTweetID: Int = 0) {
         // Warning: this'll create a live tweet with the given text on behalf of the current user!
         if(text == "") {
             return;
@@ -187,6 +179,17 @@ class TwitterClient: BDBOAuth1SessionManager {
             }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
                 
         }
+    }
+    
+    func getUserByScreenname(screenname: NSString, success: (User) -> (), failure: (NSError) -> ()) {
+        GET("1.1/users/lookup.json?screen_name=" + String(screenname), parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+                let userDictionary = response as! [NSDictionary];
+                let user = User(dictionary: userDictionary[0]);
+                success(user);
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                print("error: \(error.localizedDescription)");
+                failure(error);
+        });
     }
 
 }

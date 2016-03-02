@@ -114,6 +114,10 @@ class TweetCell: UITableViewCell {
                 
                 tweetContentsLabel.attributedText = text;
             }
+            
+            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("openProfile"));
+            authorNameLabel.userInteractionEnabled = true;
+            authorNameLabel.addGestureRecognizer(tapGestureRecognizer);
         }
     }
 
@@ -160,6 +164,10 @@ class TweetCell: UITableViewCell {
             tweet.favorited = true;
             favoriteCountLabel.text = String(tweet.favoritesCount) ?? "";
         }
+    }
+    
+    func openProfile(){
+        self.delegate!.openProfile(tweet.screenname!);
     }
 
 }

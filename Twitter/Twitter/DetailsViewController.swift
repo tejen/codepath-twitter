@@ -92,4 +92,11 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func openProfile(userScreenname: NSString){
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
+        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController;
+        vc.userScreenname = userScreenname;
+        self.presentViewController(vc, animated: true, completion: nil);
+    }
+
 }

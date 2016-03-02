@@ -22,11 +22,15 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     
     @IBOutlet var imageLockIcon: UIImageView!
     @IBOutlet var imageCogIcon: UIImageView!
+    @IBOutlet var imageProfileOptions: UIImageView!
     
     @IBOutlet var shadowEffectView: UIView!
     @IBOutlet var tableView: UITableView!
     
+    @IBOutlet var closeModalButton: UIButton!
+    
     var user: User!;
+    var userScreenname: NSString?;
     
     var refreshControl: UIRefreshControl!;
     var isMoreDataLoading = false;
@@ -47,10 +51,36 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
 
         // Do any additional setup after loading the view.
         
+        NSNotificationCenter.defaultCenter().addObserverForName("ProfileConfigureSubviews", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+            self.user = User.bufferUser;
+            self.configureViewController();
+        };
+        
         if(user == nil) {
-            user = User.currentUser!;
+            if(userScreenname == nil) {
+                user = User.currentUser!;
+                configureViewController()
+            } else {
+                // populate User by screenname via api
+                TwitterClient.sharedInstance.getUserByScreenname(userScreenname!, success: { (user: User) -> () in
+                    User.bufferUser = user;
+                    NSNotificationCenter.defaultCenter().postNotificationName("ProfileConfigureSubviews", object: nil);
+                }, failure: { (error: NSError) -> () in
+                    // code
+                })
+            }
+        } else {
+            configureViewController();
         }
         
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func configureViewController() {
         let profileImageUrl = user.profileUrl;
         let backgroundImageUrl = user.backgroundImageURL;
         
@@ -97,7 +127,7 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         tableView.dataSource = self;
         tableView.rowHeight = UITableViewAutomaticDimension;
         tableView.estimatedRowHeight = 160.0;
-
+        
         reloadData();
         
         
@@ -116,14 +146,22 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
         tableView.contentInset = insets;
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        if(user.screenname != User.currentUser?.screenname) {
+            let tapGestureRecognizer2 = UITapGestureRecognizer(target:self, action:Selector("closeProfileModal"));
+            closeModalButton.userInteractionEnabled = true;
+            closeModalButton.addGestureRecognizer(tapGestureRecognizer2);
+            closeModalButton.hidden = false;
+            imageProfileOptions.hidden = true;
+            imageCogIcon.hidden = true;
+        }
     }
     
     func profileCogMenu() {
+        if(user == User.currentUser){
+            return;
+        }
+        
         let actionSheetControllerIOS8: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet);
         
         let cancelActionButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
@@ -138,6 +176,10 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         actionSheetControllerIOS8.addAction(deleteActionButton)
         
         self.presentViewController(actionSheetControllerIOS8, animated: true, completion: nil)
+    }
+    
+    func closeProfileModal() {
+        dismissViewControllerAnimated(true, completion: nil);
     }
     
     func shortenNumber(var number: Double) -> String {
@@ -224,6 +266,13 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
                 // ... Code to load more results ...
             }
         }
+    }
+    
+    func openProfile(userScreenname: NSString){
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
+        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController;
+        vc.user = user;
+        self.presentViewController(vc, animated: true, completion: nil);
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
