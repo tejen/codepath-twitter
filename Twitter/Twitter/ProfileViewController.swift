@@ -158,7 +158,7 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     }
     
     func profileCogMenu() {
-        if(user == User.currentUser){
+        if(user != User.currentUser){
             return;
         }
         
