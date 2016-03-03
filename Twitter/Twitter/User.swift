@@ -36,7 +36,10 @@ class User: NSObject {
         name = dictionary["name"] as? String;
         screenname = dictionary["screen_name"] as? String;
         
-        backgroundImageURL = dictionary["profile_background_image_url_https"] as? String;
+        backgroundImageURL = dictionary["profile_banner_url"] as? String;
+        if(backgroundImageURL != nil) {
+            backgroundImageURL?.appendContentsOf("/600x200");
+        }
         let profileUrlString = dictionary["profile_image_url_https"] as? String;
         profileUrl = NSURL(string: profileUrlString!.replace("normal.png", withString: "bigger.png"));
         
