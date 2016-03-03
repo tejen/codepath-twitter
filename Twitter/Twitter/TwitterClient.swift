@@ -85,7 +85,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         
         // dummy api to overcome rate limit problems:
         // https://tejen.net/sub/codepath/twitter/#home_timeline.json
-        GET("https://tejen.net/sub/codepath/twitter/#home_timeline.json1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
