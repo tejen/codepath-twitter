@@ -98,7 +98,10 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [ ] Can view **entire conversation threads** and all replies to Tweets.
+- [ ] Can **reply to a Tweet** and see your reply in the context of the conversation.
+- [ ] Can view **images** in Tweets
+- [ ] Character count on Tweet Compose page
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
