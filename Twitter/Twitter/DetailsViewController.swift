@@ -16,7 +16,15 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var closeNavBarOnDisappear = false;
     
     var tweetChain = [Tweet]();
-    var chainIsPopulated = false;
+    var chainIsPopulated = false {
+        didSet {
+            if(tweetChain.count > 1) {
+                self.title = "Conversation";
+            } else {
+                self.title = "Tweet";
+            }
+        }
+    };
     
     var tweetComposedReply: Tweet?;
     
