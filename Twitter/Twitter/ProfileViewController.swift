@@ -82,6 +82,11 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         profileImageView.setImageWithURL(profileImageUrl!);
         if let backgroundImageUrl = backgroundImageUrl {
             backgroundImageView.setImageWithURL(NSURL(string: backgroundImageUrl)!);
+            if(user.usingBannerImage != true) {
+                backgroundImageView.contentMode = .ScaleAspectFill;
+            } else {
+                backgroundImageView.contentMode = .Redraw;
+            }
         }
         profileImageView.clipsToBounds = true;
         profileImageView.layer.cornerRadius = 5;

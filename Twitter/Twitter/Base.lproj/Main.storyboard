@@ -438,7 +438,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TweetCompactCell" rowHeight="108" id="hq4-13-fSR" customClass="TweetCompactCell" customModule="Twitter" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="108"/>
+                                        <rect key="frame" x="0.0" y="28" width="600" height="108"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hq4-13-fSR" id="kOl-mP-Vra">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="107.5"/>
@@ -643,7 +643,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TweetExpandedCell" rowHeight="278" id="KVR-Wp-b8n" customClass="TweetExtendedCell" customModule="Twitter" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="200" width="600" height="278"/>
+                                        <rect key="frame" x="0.0" y="136" width="600" height="278"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KVR-Wp-b8n" id="dcD-Bb-VTd">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="277.5"/>
@@ -1702,8 +1702,8 @@
         <image name="Sprites-Profile" width="163" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="TBv-jZ-J2l"/>
         <segue reference="EeQ-nL-BV5"/>
-        <segue reference="owW-8A-i7n"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.11372549019607843" green="0.63137254901960782" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
 </document>

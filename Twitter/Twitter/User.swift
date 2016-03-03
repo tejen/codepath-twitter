@@ -19,6 +19,7 @@ class User: NSObject {
     var profileUrl: NSURL?;
     var tagline: NSString?;
     var backgroundImageURL: String?;
+    var usingBannerImage = true;
     
     var followersCount: Int?;
     var followingCount: Int?;
@@ -39,6 +40,9 @@ class User: NSObject {
         backgroundImageURL = dictionary["profile_banner_url"] as? String;
         if(backgroundImageURL != nil) {
             backgroundImageURL?.appendContentsOf("/600x200");
+        } else {
+            backgroundImageURL = dictionary["profile_background_image_url_https"] as? String;
+            usingBannerImage = false;
         }
         let profileUrlString = dictionary["profile_image_url_https"] as? String;
         profileUrl = NSURL(string: profileUrlString!.replace("normal.png", withString: "bigger.png"));
