@@ -9,28 +9,22 @@
 import UIKit
 
 class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITableViewDelegate, TweetTableViewDelegate {
-
+    
     @IBOutlet var backgroundImageView: UIImageView!
     @IBOutlet var profileImageView: UIImageView!
     @IBOutlet var profileImageSuperview: UIView!
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var screennameLabel: UILabel!
-    @IBOutlet var locationLabel: UILabel!
-    
-    @IBOutlet var followingCountLabel: UILabel!
-    @IBOutlet var followersCountLabel: UILabel!
-    
-    @IBOutlet var imageLockIcon: UIImageView!
-    @IBOutlet var imageCogIcon: UIImageView!
-    @IBOutlet var imageProfileOptions: UIImageView!
     
     @IBOutlet var shadowEffectView: UIView!
     @IBOutlet var tableView: UITableView!
     
     @IBOutlet var closeModalButton: UIButton!
     
+    @IBOutlet var profileDescriptionContainer: UIView!
+    
     var user: User!;
     var userScreenname: NSString?;
+    
+    var pagedView: ProfileDescriptionPageViewController?;
     
     var refreshControl: UIRefreshControl!;
     var isMoreDataLoading = false;
@@ -51,28 +45,26 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
 
         // Do any additional setup after loading the view.
         
-        NSNotificationCenter.defaultCenter().addObserverForName("ProfileConfigureSubviews", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName("ProfileConfigureView", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
             self.user = User.bufferUser;
             self.configureViewController();
         };
-        
-        if(user == nil) {
-            if(userScreenname == nil) {
-                user = User.currentUser!;
-                configureViewController()
-            } else {
-                // populate User by screenname via api
-                TwitterClient.sharedInstance.getUserByScreenname(userScreenname!, success: { (user: User) -> () in
-                    User.bufferUser = user;
-                    NSNotificationCenter.defaultCenter().postNotificationName("ProfileConfigureSubviews", object: nil);
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        User.bufferUser = nil;
+        if(userScreenname == nil) {
+            user = User.currentUser!;
+            configureViewController();
+        } else {
+            // populate User by screenname via api
+            TwitterClient.sharedInstance.getUserByScreenname(userScreenname!, success: { (user: User) -> () in
+                User.bufferUser = user;
+                NSNotificationCenter.defaultCenter().postNotificationName("ProfileConfigureView", object: nil);
                 }, failure: { (error: NSError) -> () in
                     // code
-                })
-            }
-        } else {
-            configureViewController();
+            })
         }
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -81,37 +73,19 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     }
     
     func configureViewController() {
+        User.bufferUser = user; // ensure it's there, for the paged views.
+        NSNotificationCenter.defaultCenter().postNotificationName("ProfileConfigureSubviews", object: nil);
+        
         let profileImageUrl = user.profileUrl;
         let backgroundImageUrl = user.backgroundImageURL;
         
-        let name = user.name;
-        let screenname = user.screenname;
-        let protected = user.protected;
-        let location = user.locationString;
-        let followingCount = user.followingCount;
-        let followersCount = user.followersCount;
-        
-        if(protected == nil) {
-            imageLockIcon.hidden = true;
-        }
-        
-        nameLabel.text = String(name!);
-        
         profileImageView.setImageWithURL(profileImageUrl!);
-        backgroundImageView.setImageWithURL(NSURL(string: backgroundImageUrl!)!);
+        if let backgroundImageUrl = backgroundImageUrl {
+            backgroundImageView.setImageWithURL(NSURL(string: backgroundImageUrl)!);
+        }
         profileImageView.clipsToBounds = true;
         profileImageView.layer.cornerRadius = 5;
         profileImageSuperview.layer.cornerRadius = 5;
-        
-        screennameLabel.text = "@" + String(screenname!);
-        locationLabel.text = String(location!);
-        
-        followersCountLabel.text = shortenNumber(Double(followersCount!));
-        followingCountLabel.text = shortenNumber(Double(followingCount!));
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("profileCogMenu"));
-        imageCogIcon.userInteractionEnabled = true;
-        imageCogIcon.addGestureRecognizer(tapGestureRecognizer);
         
         let gradientLayer = CAGradientLayer();
         gradientLayer.frame = shadowEffectView.bounds;
@@ -121,15 +95,21 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         gradientLayer.locations = [0.0, 1.0];
         self.shadowEffectView.layer.addSublayer(gradientLayer);
         
-        // table
+        if(user.screenname != User.currentUser?.screenname) {
+            let tapGestureRecognizer2 = UITapGestureRecognizer(target:self, action:Selector("closeProfileModal"));
+            closeModalButton.userInteractionEnabled = true;
+            closeModalButton.addGestureRecognizer(tapGestureRecognizer2);
+            closeModalButton.hidden = false;
+        } else {
+            closeModalButton.hidden = true;
+        }
         
+        // Set up Table
         tableView.delegate = self;
         tableView.dataSource = self;
         tableView.rowHeight = UITableViewAutomaticDimension;
         tableView.estimatedRowHeight = 160.0;
-        
         reloadData();
-        
         
         // Set up Pull To Refresh loading indicator
         refreshControl = UIRefreshControl();
@@ -146,59 +126,10 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
         tableView.contentInset = insets;
-        
-        if(user.screenname != User.currentUser?.screenname) {
-            let tapGestureRecognizer2 = UITapGestureRecognizer(target:self, action:Selector("closeProfileModal"));
-            closeModalButton.userInteractionEnabled = true;
-            closeModalButton.addGestureRecognizer(tapGestureRecognizer2);
-            closeModalButton.hidden = false;
-            imageProfileOptions.hidden = true;
-            imageCogIcon.hidden = true;
-        }
-    }
-    
-    func profileCogMenu() {
-        if(user != User.currentUser){
-            return;
-        }
-        
-        let actionSheetControllerIOS8: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet);
-        
-        let cancelActionButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-            print("Cancel")
-        }
-        actionSheetControllerIOS8.addAction(cancelActionButton)
-
-        let deleteActionButton: UIAlertAction = UIAlertAction(title: "Sign Out", style: .Destructive)
-            { action -> Void in
-                TwitterClient.sharedInstance.logout();
-        }
-        actionSheetControllerIOS8.addAction(deleteActionButton)
-        
-        self.presentViewController(actionSheetControllerIOS8, animated: true, completion: nil)
     }
     
     func closeProfileModal() {
         dismissViewControllerAnimated(true, completion: nil);
-    }
-    
-    func shortenNumber(var number: Double) -> String {
-        if(number > 999999999) {
-            number = number/1000000000;
-            return String(format: "%.1f", number) + "B";
-        }
-        if(number > 999999) {
-            number = number/1000000;
-            return String(format: "%.1f", number) + "M";
-        }
-        if(number > 9999) {
-            number = number/1000;
-            return String(format: "%.1f", number) + "K";
-        }
-        
-        let numberFormatter = NSNumberFormatter()
-        numberFormatter.numberStyle = .DecimalStyle
-        return numberFormatter.stringFromNumber(number)!;
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -210,7 +141,7 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell;
+        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCompactCell", forIndexPath: indexPath) as! TweetCompactCell;
         cell.indexPath = indexPath;
         cell.tweet = tweets![indexPath.row];
         cell.delegate = self;
@@ -236,13 +167,15 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
         if(append) {
             completion = { (tweets: [Tweet]) -> () in
                 var cleaned = tweets;
-                if(tweets.count > 1) {
+                if(tweets.count > 0) {
                     cleaned.removeAtIndex(0); // api param "max_id" is inclusive
                 }
-                self.tweets?.appendContentsOf(cleaned); // api param "max_id" is inclusive);
-                self.isMoreDataLoading = false
-                self.loadingMoreView!.stopAnimating()
-                self.tableView.reloadData();
+                if(cleaned.count > 0) {
+                    self.tweets?.appendContentsOf(cleaned);
+                    self.isMoreDataLoading = false
+                    self.loadingMoreView!.stopAnimating()
+                    self.tableView.reloadData();
+                }
             };
         } else {
             lastTweetId = nil;
@@ -270,8 +203,13 @@ class ProfileViewController: UIViewController, UIActionSheetDelegate, UITableVie
     
     func openProfile(userScreenname: NSString){
         let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
-        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController;
-        vc.user = user;
+        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewNavigationController") as! UINavigationController;
+        let pVc = vc.viewControllers.first as! ProfileViewController;
+        pVc.userScreenname = userScreenname;
+        self.presentViewController(vc, animated: true, completion: nil);
+    }
+    
+    func openCompose(vc: UIViewController) {
         self.presentViewController(vc, animated: true, completion: nil);
     }
     
