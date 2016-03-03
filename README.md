@@ -69,7 +69,7 @@ Describe any challenges encountered while building the app.
 
 # Project 5 - *Twitter*
 
-Time spent: **2** hours spent in total
+Time spent: **6** hours spent in total
 
 ## User Stories
 
@@ -85,10 +85,10 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 - [X] When composing, you should have a countdown in the upper right for the tweet limit.
-- [ ] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
+- [X] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
 - [X] Profile Page
-   - [ ] Implement the paging view for the user description.
-   - [ ] As the paging view moves, increase the opacity of the background screen. See the actual Twitter app for this effect
+   - [X] Implement the paging view for the user description.
+   - [X] As the paging view moves, increase the opacity of the background screen. See the actual Twitter app for this effect
    - [ ] Pulling down the profile page should blur and resize the header image.
 - [ ] Account switching
    - [ ] Long press on tab bar to bring up Account view with animation
