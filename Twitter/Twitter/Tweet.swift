@@ -154,7 +154,7 @@ class Tweet: NSObject {
         let value = Int(timeSince);
         var l18n = "\(value)\(unit), ";
         let formatter = NSDateFormatter();
-        formatter.dateFormat = "h:m a";
+        formatter.dateFormat = "h:mm a";
         l18n += formatter.stringFromDate(date);
         return l18n;
     }

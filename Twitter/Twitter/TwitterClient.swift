@@ -85,7 +85,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         
         // dummy api to overcome rate limit problems:
         // https://tejen.net/sub/codepath/twitter/#home_timeline.json
-        GET("1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        GET("https://tejen.net/sub/codepath/twitter/#home_timeline.json1.1/statuses/home_timeline.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let dictionaries = response as! [NSDictionary];
             let tweets = Tweet.tweetsWithArray(dictionaries);
@@ -164,18 +164,15 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
-    func publishTweet(text: String, replyToTweetID: Int = 0) {
+    func publishTweet(text: String, replyToTweetID: NSNumber? = 0, success: (Tweet) -> ()) {
         // Warning: this'll create a live tweet with the given text on behalf of the current user!
         if(text == "") {
             return;
         }
-        var params = ["status": text];
-        if(replyToTweetID != 0) {
-            params["in_reply_to_status_id"] = String(replyToTweetID);
-            // @username of author of replyToTweetID must be included within new tweet text!
-        }
+        let params = ["status": text, "in_reply_to_status_id": Int(replyToTweetID!)];
         POST("1.1/statuses/update.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            
+                let tweet = Tweet(dictionary: response as! NSDictionary);
+                success(tweet);
             }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
                 
         }

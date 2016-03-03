@@ -17,6 +17,10 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var tweetChain = [Tweet]();
     var chainIsPopulated = false;
+    
+    var tweetComposedReply: Tweet?;
+    
+    var lastIndexPath: NSIndexPath?;
 
     @IBOutlet var tableView: UITableView!
     
@@ -45,12 +49,20 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         );
         
+        self.navigationController?.navigationBarHidden = false;
     }
     
     override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated);
         if(closeNavBarOnDisappear) {
             self.navigationController?.navigationBarHidden = true;
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated);
+        
+        tableViewScrollToBottom(true);
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,9 +85,10 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.indexPath = indexPath;
             cell.tweet = cellTweet;
             cell.delegate = self;
+            lastIndexPath = indexPath;
             return cell;
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell;
+            let cell = tableView.dequeueReusableCellWithIdentifier("TweetCompactCell", forIndexPath: indexPath) as! TweetCompactCell;
             cell.indexPath = indexPath;
             cell.tweet = cellTweet;
             cell.delegate = self;
@@ -94,9 +107,36 @@ class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func openProfile(userScreenname: NSString){
         let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
-        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as! ProfileViewController;
-        vc.userScreenname = userScreenname;
+        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewNavigationController") as! UINavigationController;
+        let pVc = vc.viewControllers.first as! ProfileViewController;
+        pVc.userScreenname = userScreenname;
         self.presentViewController(vc, animated: true, completion: nil);
     }
-
+    
+    func openCompose(vc: UIViewController) {
+        self.presentViewController(vc, animated: true, completion: nil);
+    }
+    
+    func tableViewScrollToBottom(animated: Bool) {
+        
+        let delay = 0.1 * Double(NSEC_PER_SEC)
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        
+        dispatch_after(time, dispatch_get_main_queue(), {
+            
+            let numberOfSections = self.tableView.numberOfSections
+            let numberOfRows = self.tableView.numberOfRowsInSection(numberOfSections-1)
+            
+            if numberOfRows > 1 {
+                let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
+                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated);
+                self.tableView.cellForRowAtIndexPath(indexPath)?.layer.backgroundColor = UIColor(red: 1.0, green: 241/255.0, blue: 156/255.0, alpha: 1).CGColor;
+                UIView.animateWithDuration(2, animations: { () -> Void in
+                    self.tableView.cellForRowAtIndexPath(indexPath)?.layer.backgroundColor = UIColor.clearColor().CGColor;
+                });
+            }
+            
+        })
+    }
+    
 }

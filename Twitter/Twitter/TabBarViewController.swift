@@ -18,6 +18,9 @@ class TabBarViewController: UITabBarController {
             self.dismissViewControllerAnimated(true, completion: nil);
         };
         
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+        appDelegate.tabBarController = self;
+        
     }
 
     override func didReceiveMemoryWarning() {

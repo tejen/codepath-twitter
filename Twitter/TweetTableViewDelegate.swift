@@ -12,4 +12,6 @@ protocol TweetTableViewDelegate: class, UITableViewDelegate {
     func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath);
     
     func openProfile(userScreenname: NSString);
+    
+    func openCompose(viewController: UIViewController);
 }

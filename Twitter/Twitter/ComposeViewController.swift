@@ -14,9 +14,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var screennameLabel: UILabel!
     @IBOutlet var inputText: UITextView!
+    @IBOutlet var replyScreennameLabel: UILabel!
     
     var charCountLabel: UILabel!;
     var tweetButton: UIButton!;
+    
+    var replyToTweet: Tweet?;
     
     let charCountLabelNormalTextColor = UIColor(red: 136/255.0, green: 146/255.0, blue: 158/255.0, alpha: 1);
     let tweetButtonEnabledBackgroundColor = UIColor(red: 29/255.0, green: 161/255.0, blue: 243/255.0, alpha: 1);
@@ -54,11 +57,33 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
         tweetButton.addTarget(self, action: "onTweetButton", forControlEvents: .TouchDown);
         toolbarView.addSubview(tweetButton);
         
+        if(replyToTweet == nil) {
+            print("not a reply");
+            replyScreennameLabel.text = "";
+        } else {
+            replyScreennameLabel.hidden = false;
+            replyScreennameLabel.text = "@" + (replyToTweet!.screenname! as String) + ":";
+        }
+        
         disableSending();
     }
     
     func onTweetButton() {
-        TwitterClient.sharedInstance.publishTweet(inputText.text);
+        var composedText = inputText.text;
+        if(replyToTweet == nil) { // making a brand new tweet
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+            appDelegate.switchToProfileTab(true);
+        } else { // replying to someone else's tweet!
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+            appDelegate.openTweetDetails(replyToTweet!);
+            composedText = "@" + ((replyToTweet!.screenname!) as String) + ": " + composedText;
+        }
+        
+        TwitterClient.sharedInstance.publishTweet(composedText, replyToTweetID: replyToTweet?.TweetID) { (newTweet: Tweet) -> () in
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+            appDelegate.openTweetDetails(newTweet);
+        }
+        
         dismissViewControllerAnimated(true, completion: nil);
     }
 

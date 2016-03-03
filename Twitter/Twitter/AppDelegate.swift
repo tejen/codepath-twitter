@@ -12,8 +12,10 @@ import BDBOAuth1Manager
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    var window: UIWindow?;
     var splashInterludePersist = false;
+    
+    var tabBarController: UITabBarController?;
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -50,6 +52,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TwitterClient.sharedInstance.handleOpenUrl(url);
         
         return true;
+    }
+    
+    func switchToProfileTab(reloadUserProfile: Bool = false) {
+        if(reloadUserProfile) {
+            delay(1.0, closure: { () -> () in
+                let pnVc = self.tabBarController?.childViewControllers.last as! UINavigationController;
+                let pVc = pnVc.viewControllers.first as! ProfileViewController;
+                pVc.reloadData();
+            });
+        }
+        
+        if tabBarController != nil {
+            if(tabBarController!.selectedIndex != 3) {
+                tabBarController!.selectedIndex = 3
+            }
+        }
+    }
+    
+    func openTweetDetails(tweet: Tweet) {
+        let storyboard = UIStoryboard(name: "Main", bundle:nil);
+        let vc = storyboard.instantiateViewControllerWithIdentifier("DetailsViewController") as! DetailsViewController;
+        vc.tweet = tweet;
+        self.window?.rootViewController!.presentedViewController!.presentViewController(vc, animated:true, completion:nil);
     }
     
 }
