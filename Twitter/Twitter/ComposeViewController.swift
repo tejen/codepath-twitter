@@ -41,7 +41,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
         let charCountFrame = CGRect(x: 20, y: 0, width: navigationBar.frame.width/2, height: navigationBar.frame.height);
         charCountLabel = UILabel(frame: charCountFrame);
         charCountLabel.textColor = charCountLabelNormalTextColor;
-        charCountLabel.text = "160";
+        charCountLabel.text = "140";
         charCountLabel.frame = charCountFrame;
         navigationBar.addSubview(charCountLabel);
         
@@ -133,11 +133,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidChange(textView: UITextView) {
         let charCount = textView.text.characters.count;
-        charCountLabel.text = String(160 - charCount);
+        charCountLabel.text = String(140 - charCount);
         if(charCount == 0) {
             disableSending();
         }
-        else if(charCount >= 160) {
+        else if(charCount >= 140) {
             disableSending(true);
         } else {
             enableSending();
