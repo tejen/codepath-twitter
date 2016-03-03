@@ -2,7 +2,7 @@
 //  TweetCell.swift
 //  Twitter
 //
-//  Created by Tejen Hasmukh Patel on 2/22/16.
+//  Created by Tejen Hasmukh Patel on 3/3/16.
 //  Copyright © 2016 Tejen. All rights reserved.
 //
 
@@ -10,22 +10,21 @@ import UIKit
 
 class TweetCell: UITableViewCell {
     
+    @IBOutlet var profilePictureImageView: UIImageView!
     @IBOutlet var authorNameLabel: UILabel!
     @IBOutlet var authorScreennameLabel: UILabel!
-    @IBOutlet var profilePictureImageView: UIImageView!
     
     @IBOutlet var tweetContentsLabel: UILabel!
     @IBOutlet var tweetAgeLabel: UILabel!
-    
-    @IBOutlet var retweetButton: DOFavoriteButton!
-    @IBOutlet var favoriteButton: DOFavoriteButton!
-    
+
     @IBOutlet var retweetCountLabel: UILabel!
     @IBOutlet var favoriteCountLabel: UILabel!
+    @IBOutlet var favoriteButton: DOFavoriteButton!
+    @IBOutlet var retweetButton: DOFavoriteButton!
     
+    @IBOutlet var mediaImageView: UIImageView!
     @IBOutlet var mediaImageVerticalSpacingConstraint: NSLayoutConstraint!
     @IBOutlet var mediaImageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var mediaImageView: UIImageView!
     
     var tweetID: NSNumber?;
     
@@ -33,109 +32,120 @@ class TweetCell: UITableViewCell {
     
     var indexPath: NSIndexPath!;
     
+    var tweetTextFontSize: CGFloat { get { return 15.0 } };
+    var tweetTextFontWeight: CGFloat { get { return UIFontWeightRegular } };
+    
     var tweet: Tweet! {
         didSet {
-            tweetID = tweet.TweetID;
-            profilePictureImageView.setImageWithURL(tweet.authorProfilePicURL!);
-            profilePictureImageView.layer.cornerRadius = 5;
-            profilePictureImageView.clipsToBounds = true;
-            authorNameLabel.text = tweet.author as? String;
-            authorScreennameLabel.text = "@" + (tweet.screenname as! String);
-            
-            tweetContentsLabel.text = tweet.text as? String;
-            tweetAgeLabel.text = Tweet.timeSince(tweet.timestamp!);
-            
-            let urls = tweet.urls;
-            let media = tweet.media;
-            
-            retweetCountLabel.text = tweet.retweetCount > 0 ? String(tweet.retweetCount) : "";
-            
-            favoriteCountLabel.text = tweet.favoritesCount > 0 ? String(tweet.favoritesCount) : "";
-            
-            retweetButton.selected = tweet.retweeted;
-            favoriteButton.selected = tweet.favorited;
-            
-            mediaImageView.image = nil;
-            
-            var displayUrls = [String]();
-            
-            if let urls = urls {
-                for url in urls {
-                    let urltext = url["url"] as! String;
-                    tweetContentsLabel.text = tweetContentsLabel.text?.replace(urltext, withString: "");
-                    
-                    let displayurl = url["display_url"] as! String;
-                    displayUrls.append(displayurl);
-                }
-            }
-            
-            if let media = media {
-                for medium in media {
-                    let urltext = medium["url"] as! String;
-                    tweetContentsLabel.text = tweetContentsLabel.text?.replace(urltext, withString: "");
-                    if((medium["type"] as? String) == "photo") {
-                        mediaImageVerticalSpacingConstraint.constant = 8;
-                        let mediaurl = medium["media_url_https"] as! String;
-                        mediaImageView.hidden = false;
-                        
-                        mediaImageHeightConstraint.active = false;
-                        
-                        mediaImageView.layer.cornerRadius = 5;
-                        mediaImageView.clipsToBounds = true;
-                        mediaImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: mediaurl)!), placeholderImage: nil, success: { (r: NSURLRequest, u: NSHTTPURLResponse?, i: UIImage) -> Void in
-                                // success
-                                self.mediaImageView.image = i;
-                                self.delegate?.reloadTableCellAtIndex(self, indexPath: self.indexPath);
-                            }, failure: { (r: NSURLRequest, u: NSHTTPURLResponse?, e: NSError) -> Void in
-                                // error
-                        });
-                    }
-                }
-            }
-            
-            if(displayUrls.count > 0){
-                let content = tweetContentsLabel.text ?? "";
+            tweetSetConfigureSubviews()
+        }
+    }
+    
+    func tweetSetConfigureSubviews() {
+        tweetID = tweet.TweetID;
+        tweetID = tweet.TweetID;
+        profilePictureImageView.setImageWithURL(tweet.authorProfilePicURL!);
+        profilePictureImageView.layer.cornerRadius = 5;
+        profilePictureImageView.clipsToBounds = true;
+        authorNameLabel.text = tweet.author as? String;
+        authorScreennameLabel.text = "@" + (tweet.screenname as! String);
+        
+        tweetContentsLabel.text = tweet.text as? String;
+        
+        let urls = tweet.urls;
+        let media = tweet.media;
 
-                let urlText = " " + displayUrls.joinWithSeparator(" ");
+        retweetButton.selected = tweet.retweeted;
+        favoriteButton.selected = tweet.favorited;
+        
+        mediaImageView.image = nil;
+        
+        var displayUrls = [String]();
+        
+        if let urls = urls {
+            for url in urls {
+                let urltext = url["url"] as! String;
+                tweetContentsLabel.text = tweetContentsLabel.text?.replace(urltext, withString: "");
                 
-                let text = NSMutableAttributedString(string: content);
-                text.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15.0), range: NSRange(location: 0, length: content.characters.count));
-                
-                let links = NSMutableAttributedString(string: urlText);
-                links.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15.0), range: NSRange(location: 0, length: urlText.characters.count));
-                links.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 36/255.0, green: 144/255.0, blue: 212/255.0, alpha: 1), range: NSRange(location: 0, length: urlText.characters.count));
-                
-                text.appendAttributedString(links);
-                
-                let style = NSMutableParagraphStyle();
-                style.lineSpacing = 5;
-                style.lineBreakMode = .ByCharWrapping;
-                text.addAttribute(NSParagraphStyleAttributeName, value: style, range: NSRange(location: 0, length: text.string.characters.count));
-                
-                tweetContentsLabel.attributedText = text;
+                var displayurl = url["display_url"] as! String;
+                if let expandedURL = url["expanded_url"] {
+                    displayurl = expandedURL as! String;
+                }
+                displayUrls.append(displayurl);
             }
+        }
+        
+        if let media = media {
+            for medium in media {
+                let urltext = medium["url"] as! String;
+                tweetContentsLabel.text = tweetContentsLabel.text?.replace(urltext, withString: "");
+                if((medium["type"] as? String) == "photo") {
+                    
+                    revealPhoto();
+                    
+                    let mediaurl = medium["media_url_https"] as! String;
+                    
+                    mediaImageHeightConstraint.active = false;
+                    
+                    mediaImageView.layer.cornerRadius = 5;
+                    mediaImageView.clipsToBounds = true;
+                    mediaImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: mediaurl)!), placeholderImage: nil, success: { (r: NSURLRequest, u: NSHTTPURLResponse?, i: UIImage) -> Void in
+                        // success
+                        self.mediaImageView.image = i;
+                        self.delegate?.reloadTableCellAtIndex(self, indexPath: self.indexPath);
+                        }, failure: { (r: NSURLRequest, u: NSHTTPURLResponse?, e: NSError) -> Void in
+                            // error
+                    });
+                }
+            }
+        }
+
+        if(displayUrls.count > 0){
+            let content = tweetContentsLabel.text ?? "";
+            
+            let urlText = " " + displayUrls.joinWithSeparator(" ");
+            
+            let text = NSMutableAttributedString(string: content);
+            
+            text.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(tweetTextFontSize, weight: tweetTextFontWeight), range: NSRange(location: 0, length: content.characters.count));
+            
+            let links = NSMutableAttributedString(string: urlText);
+            links.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(tweetTextFontSize, weight: tweetTextFontWeight), range: NSRange(location: 0, length: urlText.characters.count));
+            
+            links.addAttribute(NSForegroundColorAttributeName, value: UIColor(red: 36/255.0, green: 144/255.0, blue: 212/255.0, alpha: 1), range: NSRange(location: 0, length: urlText.characters.count));
+            
+            text.appendAttributedString(links);
+
+            let style = NSMutableParagraphStyle();
+            style.lineSpacing = 5;
+            style.lineBreakMode = .ByCharWrapping;
+            text.addAttribute(NSParagraphStyleAttributeName, value: style, range: NSRange(location: 0, length: text.string.characters.count));
+            
+            tweetContentsLabel.attributedText = text;
+
             
             let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("openProfile"));
             authorNameLabel.userInteractionEnabled = true;
             authorNameLabel.addGestureRecognizer(tapGestureRecognizer);
+            
         }
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
-    
     @IBAction func onReplyButton(sender: DOFavoriteButton) {
-        sender.select();
-        print("reply");
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
+        let vNc = storyboard.instantiateViewControllerWithIdentifier("ComposeViewNavigationController") as! UINavigationController;
+        let vc = vNc.viewControllers.first as! ComposeViewController;
+        vc.replyToTweet = tweet;
+        delegate!.openCompose(vNc);
     }
     
     @IBAction func onRetweetButton(sender: DOFavoriteButton) {
@@ -167,7 +177,23 @@ class TweetCell: UITableViewCell {
     }
     
     func openProfile(){
+        let handle = authorScreennameLabel.text;
+        if((handle != nil) && (handle! == "@"+((User.currentUser?.screenname)! as String))) {
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+            appDelegate.switchToProfileTab();
+            return;
+        }
+        authorNameLabel.layer.cornerRadius = 5;
+        authorNameLabel.backgroundColor = UIColor.lightGrayColor();
         self.delegate!.openProfile(tweet.screenname!);
+        delay(1.0) { () -> () in
+            self.authorNameLabel.backgroundColor = UIColor.clearColor();
+        }
+    }
+    
+    func revealPhoto() {
+        mediaImageVerticalSpacingConstraint.constant = 8;
+        mediaImageView.hidden = false;
     }
 
 }
