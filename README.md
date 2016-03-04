@@ -37,9 +37,9 @@ Please list two areas of the assignment you'd like to discuss further with your 
 
 Here's a walkthrough of implemented user stories:
 
-[<img src='http://img.tejen.net/be324662be8dad39899bb6d4959a5c4e.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://www.youtube.com/watch?v=Cepew1TVme4)
+[<img src='http://img.tejen.net/be324662be8dad39899bb6d4959a5c4e.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/Cepew1TVme4)
 
-([click here](https://www.youtube.com/watch?v=Cepew1TVme4) to view demo in HD on YouTube)
+([click here](https://youtu.be/Cepew1TVme4) to view demo in HD on YouTube)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -69,7 +69,7 @@ Describe any challenges encountered while building the app.
 
 # Project 5 - *Twitter*
 
-Time spent: **6** hours spent in total
+Time spent: **8** hours spent in total
 
 ## User Stories
 
@@ -101,7 +101,9 @@ The following **additional** features are implemented:
 - [X] Can view **entire conversation threads** and all replies to Tweets.
 - [X] Can **reply to a Tweet** and see your reply in the context of the conversation.
 - [X] Can view **images** posted in Tweets
-- [X] Character count on Tweet Compose page
+- [X] Character count/restriction on Tweet Compose page.
+- [X] Infinite Scroll on all Table Views
+- [X] Pull to Refresh on all Table Views
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
@@ -112,7 +114,9 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+[<img src='http://img.tejen.net/048765758805cb6ef10705c7e18dd0f1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/64lN2COiVpY)
+
+([click here](https://youtu.be/64lN2COiVpY) to view demo in HD on YouTube)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
