@@ -37,7 +37,7 @@ Please list two areas of the assignment you'd like to discuss further with your 
 
 Here's a walkthrough of implemented user stories:
 
-[<img src='http://img.tejen.net/be324662be8dad39899bb6d4959a5c4e.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/Cepew1TVme4)
+[<img src='http://img.tejen.net/a20d19f690ed757c2cce7aeb8fe089a8.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/Cepew1TVme4)
 
 ([click here](https://youtu.be/Cepew1TVme4) to view demo in HD on YouTube)
 
@@ -114,7 +114,9 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-[<img src='http://img.tejen.net/048765758805cb6ef10705c7e18dd0f1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/64lN2COiVpY)
+**click image below to view video walkthrough**
+
+[<img src='http://img.tejen.net/af5aff9a66353c496d7e2fa2034cc986.png' width='300px' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/64lN2COiVpY)
 
 ([click here](https://youtu.be/64lN2COiVpY) to view demo in HD on YouTube)
 
