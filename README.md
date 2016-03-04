@@ -37,7 +37,7 @@ Please list two areas of the assignment you'd like to discuss further with your 
 
 Here's a walkthrough of implemented user stories:
 
-[<img src='http://img.tejen.net/a20d19f690ed757c2cce7aeb8fe089a8.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/Cepew1TVme4)
+[<img src='http://img.tejen.net/be324662be8dad39899bb6d4959a5c4e.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />](https://youtu.be/Cepew1TVme4)
 
 ([click here](https://youtu.be/Cepew1TVme4) to view demo in HD on YouTube)
 
