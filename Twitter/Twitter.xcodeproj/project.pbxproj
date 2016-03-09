@@ -52,13 +52,13 @@
 		655059211C783C2300AB2E0F /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
 		655059231C783E7200AB2E0F /* TwitterClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterClient.swift; sourceTree = "<group>"; };
 		6563C0551C82ECC3006AE8FF /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		65745F151C82CF9F00074F9E /* TweetTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TweetTableViewDelegate.swift; path = ../TweetTableViewDelegate.swift; sourceTree = "<group>"; };
+		65745F151C82CF9F00074F9E /* TweetTableViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetTableViewDelegate.swift; sourceTree = "<group>"; };
 		657A3C671C7AEF5A003194A5 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		657A3C691C7AEF65003194A5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		657A3C6B1C7AFCA4003194A5 /* SplashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		657A3C6D1C7B1299003194A5 /* TweetCompactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetCompactCell.swift; sourceTree = "<group>"; };
 		65D86E8F1C88373300964F3C /* ProfileDescriptionLeftPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLeftPageViewController.swift; sourceTree = "<group>"; };
-		65D86E911C884CC900964F3C /* ProfileDescriptionRightPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProfileDescriptionRightPageViewController.swift; path = ../ProfileDescriptionRightPageViewController.swift; sourceTree = "<group>"; };
+		65D86E911C884CC900964F3C /* ProfileDescriptionRightPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionRightPageViewController.swift; sourceTree = "<group>"; };
 		65E8DF511C7ED6420001DEB9 /* DOFavoriteButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOFavoriteButton.swift; sourceTree = "<group>"; };
 		65F5DEA91C83D115006283B6 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		65F5DEAB1C8436AC006283B6 /* TweetExtendedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetExtendedCell.swift; sourceTree = "<group>"; };
@@ -109,12 +109,23 @@
 			isa = PBXGroup;
 			children = (
 				657A3C631C7AEEA5003194A5 /* APIs */,
+				65319F8D1C8FD2FB00E45C5F /* Delegates */,
 				657A3C621C7AEE91003194A5 /* Models */,
 				657A3C6F1C7B129C003194A5 /* Views */,
 				657A3C611C7AEE8A003194A5 /* View Controllers */,
 				657A3C641C7AEEAF003194A5 /* Other */,
 			);
 			path = Twitter;
+			sourceTree = "<group>";
+		};
+		65319F8D1C8FD2FB00E45C5F /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				651F55F31C780BBA00ADED25 /* AppDelegate.swift */,
+				65745F151C82CF9F00074F9E /* TweetTableViewDelegate.swift */,
+				650123FE1C8320CB001CA264 /* TwitterLoginLoungeDelegate.swift */,
+			);
+			name = Delegates;
 			sourceTree = "<group>";
 		};
 		657A3C611C7AEE8A003194A5 /* View Controllers */ = {
@@ -156,9 +167,6 @@
 			children = (
 				651F55F71C780BBA00ADED25 /* Main.storyboard */,
 				651F55FC1C780BBA00ADED25 /* LaunchScreen.storyboard */,
-				651F55F31C780BBA00ADED25 /* AppDelegate.swift */,
-				65745F151C82CF9F00074F9E /* TweetTableViewDelegate.swift */,
-				650123FE1C8320CB001CA264 /* TwitterLoginLoungeDelegate.swift */,
 				65E8DF511C7ED6420001DEB9 /* DOFavoriteButton.swift */,
 				651F55FA1C780BBA00ADED25 /* Assets.xcassets */,
 				651F55FF1C780BBA00ADED25 /* Info.plist */,

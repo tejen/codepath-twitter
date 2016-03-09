@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var tabBarController: UITabBarController?;
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
         // Override point for customization after application launch.
 //        UIApplication.sharedApplication().statusBarStyle = .LightContent;
         return true
@@ -48,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        
+
         TwitterClient.sharedInstance.handleOpenUrl(url);
         
         return true;
@@ -95,4 +96,14 @@ func delay(delay:Double, closure:()->()) {
             Int64(delay * Double(NSEC_PER_SEC))
         ),
         dispatch_get_main_queue(), closure)
+    
+    
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        //
+    });
+    
+    dispatch_async(dispatch_get_main_queue()) { () -> Void in
+        //
+    }
+    
 }

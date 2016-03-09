@@ -979,6 +979,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYd-R9-AoQ">
+                                <rect key="frame" x="-420" y="0.0" width="412" height="44"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="760" verticalCompressionResistancePriority="760" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aRc-1F-6O8">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="117"/>
                                 <constraints>
@@ -1645,40 +1649,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KNX-bR-Jb2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3182" y="-1179"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="6Pb-HS-tMG">
-            <objects>
-                <viewController id="QXW-s8-5fg" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Q8f-4y-5Pc"/>
-                        <viewControllerLayoutGuide type="bottom" id="NEv-PT-rYH"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="UqL-JA-KII">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NJM-Yr-w7J" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="EZY-0I-aD2">
-            <objects>
-                <viewController id="ta8-6E-eZd" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Box-5K-qHg"/>
-                        <viewControllerLayoutGuide type="bottom" id="ouk-xL-OYB"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="sL6-ET-HIG">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9Eu-zs-Uir" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
         </scene>
     </scenes>
     <resources>
