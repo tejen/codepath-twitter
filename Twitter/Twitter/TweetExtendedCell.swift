@@ -8,27 +8,25 @@
 
 import UIKit
 
-class TweetExtendedCell: TweetCell {
-    
-    override var tweetTextFontSize: CGFloat { get { return 20.0 } };
-    override var tweetTextFontWeight: CGFloat { get { return UIFontWeightLight } };
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
+final class TweetExtendedCell: TweetCell {
+
+    // MARK: Private Properties
+    override var tweetTextFontSize: CGFloat { get { return 20.0 } }
+    override var tweetTextFontWeight: CGFloat { get { return UIFontWeightLight } }
+
+    // MARK: - Lifecycle Methods
     override func tweetSetConfigureSubviews() {
-        super.tweetSetConfigureSubviews();
-        
-        retweetCountLabel.text = String(tweet.retweetCount);
-        favoriteCountLabel.text = String(tweet.favoritesCount);
-        tweetAgeLabel.text = Tweet.localizedTimestamp(tweet.timestamp!);
+        super.tweetSetConfigureSubviews()
+
+        retweetCountLabel.text = String(tweet.retweetCount)
+        favoriteCountLabel.text = String(tweet.favoritesCount)
+        tweetAgeLabel.text = tweet.timestamp!.humanReadable.datetime
     }
-    
+
+    // MARK: - Private Methods
     override func revealPhoto() {
-        mediaImageVerticalSpacingConstraint.constant = 16;
-        mediaImageView.alpha = 1;
+        mediaImageVerticalSpacingConstraint.constant = 16
+        mediaImageView.alpha = 1
     }
-    
+
 }

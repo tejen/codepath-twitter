@@ -9,5 +9,8 @@
 import UIKit
 
 protocol TwitterLoginLoungeDelegate: class {
-    func continueLogin();
+
+    func continueLogin()
+    func doNotContinueLogin()
+
 }

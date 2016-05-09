@@ -8,71 +8,74 @@
 
 import UIKit
 
-class SplashViewController: UIViewController, TwitterLoginLoungeDelegate {
+final class SplashViewController: UIViewController {
 
+    // MARK: - Properties
+
+    // MARK: Private Properties
+    private var attemptingLogin = false
+
+    // MARK: - IBOutlets
     @IBOutlet var LogoHeightOriginalConstraint: NSLayoutConstraint!
     @IBOutlet var LogoHeightLargeConstraint: NSLayoutConstraint!
-    
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
-    
+
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        TwitterClient.sharedInstance.delegate = self;
+        TwitterClient.sharedInstance.delegate = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        LogoHeightLargeConstraint.active = false;
-        LogoHeightOriginalConstraint.active = true;
-    }
-    
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated);
-        
-        if(!appDelegate.splashInterludePersist) {
-            delay(1.0) { () -> () in
-                self.continueLogin();
-            }
+        super.viewDidAppear(animated)
+
+        guard !attemptingLogin else {
+            // user's returning from safari with oauth token...
+            return
         }
+
+        proceed()
     }
-    
-    func goToLogin() {
-        self.performSegueWithIdentifier("toLogin", sender: self);
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        LogoHeightLargeConstraint.active = false
+        LogoHeightOriginalConstraint.active = true
     }
-    
-    func continueToApp() {
-        LogoHeightOriginalConstraint.active = false;
-        LogoHeightLargeConstraint.active = true;
-        
+
+    // MARK: - Private Methods
+    private func goToLogin() {
+        self.performSegueWithIdentifier("toLogin", sender: self)
+    }
+
+    private func goToApp() {
+        LogoHeightOriginalConstraint.active = false
+        LogoHeightLargeConstraint.active = true
         UIView.animateWithDuration(0.5) {
-            self.view.layoutIfNeeded();
+            self.view.layoutIfNeeded()
         }
-        self.performSegueWithIdentifier("toTabbedView", sender: self);
+
+        self.performSegueWithIdentifier("toTabbedView", sender: self)
     }
-    
+
+    private func proceed() {
+        delay(0.5, closure: User.currentUser == nil ? goToLogin : goToApp)
+    }
+
+}
+
+// MARK: - TwitterLoginLoungeDelegate
+extension SplashViewController: TwitterLoginLoungeDelegate {
+
     func continueLogin() {
-        appDelegate.splashInterludePersist = false;
-        if(User.currentUser == nil) {
-            self.goToLogin();
-        } else {
-            self.continueToApp();
-        }
+        attemptingLogin = false
+        proceed()
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func doNotContinueLogin() {
+        attemptingLogin = true
     }
-    */
 
 }

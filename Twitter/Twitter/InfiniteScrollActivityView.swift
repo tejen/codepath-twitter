@@ -2,43 +2,51 @@
 //  InfiniteScrollActivityView.swift
 //  Twitter
 //
-//  Class provided by CodePath iOS University
+//  Derived from course content provided by CodePath iOS University
 //
 
 import UIKit
 
-class InfiniteScrollActivityView: UIView {
-    var activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView()
-    static let defaultHeight:CGFloat = 60.0
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+final class InfiniteScrollActivityView: UIView {
+
+    // MARK: - Constants
+    static let defaultHeight: CGFloat = 60.0
+
+    // MARK: Private Properties
+    private var activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView()
+
+    // MARK: - Lifecycle Methods
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         setupActivityIndicator()
     }
-    
+
     override init(frame aRect: CGRect) {
         super.init(frame: aRect)
         setupActivityIndicator()
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        activityIndicatorView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
+        activityIndicatorView.center = CGPoint(x: self.bounds.size.width / 2, y: self.bounds.size.height / 2)
     }
-    
-    func setupActivityIndicator() {
+
+    // MARK: Private Methods
+    private func setupActivityIndicator() {
         activityIndicatorView.activityIndicatorViewStyle = .Gray
         activityIndicatorView.hidesWhenStopped = true
-        self.addSubview(activityIndicatorView)
+        addSubview(activityIndicatorView)
     }
-    
-    func stopAnimating() {
-        self.activityIndicatorView.stopAnimating()
-        self.hidden = true
+
+    // MARK: Public Methods
+    internal func stopAnimating() {
+        activityIndicatorView.stopAnimating()
+        hidden = true
     }
-    
-    func startAnimating() {
-        self.hidden = false
-        self.activityIndicatorView.startAnimating()
+
+    internal func startAnimating() {
+        hidden = false
+        activityIndicatorView.startAnimating()
     }
+
 }

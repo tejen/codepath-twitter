@@ -8,41 +8,33 @@
 
 import UIKit
 
-class ProfileDescriptionRightPageViewController: UIViewController {
+final class ProfileDescriptionRightPageViewController: UIViewController {
 
+    // MARK: - IBOutlets
     @IBOutlet var taglineLabel: UILabel!
-    
+
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        NSNotificationCenter.defaultCenter().addObserverForName("ProfileConfigureRightSubviews", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-            if(User.bufferUser != nil) {
-                self.taglineLabel.text = User.bufferUser?.tagline as? String;
-            }
-        };
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        if(User.bufferUser != nil) {
-            taglineLabel.text = User.bufferUser?.tagline as? String;
+
+        NSNotificationCenter.defaultCenter().addObserverForName(AppInfo.notifications.ProfileConfigureRightSubviews, object: nil, queue: NSOperationQueue.mainQueue()) { _ in
+            self.grabLoadedUser()
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        grabLoadedUser()
     }
-    */
+
+    // MARK: - Private Methods
+    private func grabLoadedUser() {
+        if User.bufferUser != nil {
+            taglineLabel.text = User.bufferUser?.tagline as? String
+        }
+    }
 
 }

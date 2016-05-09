@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ncl-lE-4Ul">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ncl-lE-4Ul">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -279,7 +279,7 @@
                                                                     </connections>
                                                                 </button>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="823" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ff-rb-DFD">
-                                                                    <rect key="frame" x="85" y="2" width="47" height="21"/>
+                                                                    <rect key="frame" x="83" y="2" width="47" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" red="0.61568627450000002" green="0.6588235294" blue="0.71372549019999998" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -414,7 +414,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="R3K-bG-0Va" id="Fdz-Sq-4gK"/>
+                        <outlet property="tableViewOutlet" destination="R3K-bG-0Va" id="THh-QW-kBT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="25c-F1-n3A" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -896,8 +896,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="tableView" destination="tMg-nS-QDE" id="Dx7-Z2-0F0"/>
-                        <segue destination="PHm-87-8bb" kind="presentation" id="EeQ-nL-BV5"/>
+                        <outlet property="tableViewOutlet" destination="tMg-nS-QDE" id="hOn-Jo-Q3O"/>
+                        <segue destination="PHm-87-8bb" kind="presentation" identifier="toCompose" id="EeQ-nL-BV5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="09a-1k-XkE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -945,7 +945,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n2r-sX-wTf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-656" y="269"/>
+            <point key="canvasLocation" x="-472" y="269"/>
         </scene>
         <!--Tab Bar View Controller-->
         <scene sceneID="drk-bP-QdA">
@@ -965,7 +965,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NtE-Sx-Ejl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="118" y="269"/>
+            <point key="canvasLocation" x="222" y="269"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="QKK-0w-ATV">
@@ -1265,7 +1265,7 @@
                         <outlet property="profileImageSuperview" destination="M89-wd-g3c" id="3yh-KY-8Uc"/>
                         <outlet property="profileImageView" destination="euq-1O-Ndt" id="dZq-7X-jdu"/>
                         <outlet property="shadowEffectView" destination="O6p-ss-ASf" id="chH-dN-IOO"/>
-                        <outlet property="tableView" destination="quC-l8-3ue" id="e64-2o-48Q"/>
+                        <outlet property="tableViewOutlet" destination="quC-l8-3ue" id="ucR-oR-TDp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0hY-8H-I1K" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1278,7 +1278,7 @@
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="1MQ-X8-Ozl" customClass="ProfileDescriptionPageViewController" customModule="Twitter" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="X1D-c0-IOd" kind="show" identifier="toProfileDescriptionLeftPageViewController" id="cjb-xM-c64"/>
-                        <segue destination="pnE-GG-Mrg" kind="show" id="kWc-gQ-qaw"/>
+                        <segue destination="pnE-GG-Mrg" kind="show" identifier="toProfileDescriptionRightPageViewController" id="kWc-gQ-qaw"/>
                     </connections>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2V-wo-dC5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1554,7 +1554,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="118" y="1045"/>
+            <point key="canvasLocation" x="222" y="1049"/>
         </scene>
         <!--Home-->
         <scene sceneID="ePU-yr-i7O">

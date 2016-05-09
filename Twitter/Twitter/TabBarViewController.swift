@@ -8,34 +8,18 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+final class TabBarViewController: UITabBarController {
 
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-            self.dismissViewControllerAnimated(true, completion: nil);
-        };
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
-        appDelegate.tabBarController = self;
-        
-    }
+        NSNotificationCenter.defaultCenter().addObserverForName(AppInfo.notifications.UserDidLogout, object: nil, queue: NSOperationQueue.mainQueue()) { _ in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        AppInfo.tabBarController = self
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

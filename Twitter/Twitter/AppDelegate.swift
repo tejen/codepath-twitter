@@ -12,15 +12,12 @@ import BDBOAuth1Manager
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?;
-    var splashInterludePersist = false;
-    
-    var tabBarController: UITabBarController?;
+    var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+
         // Override point for customization after application launch.
-//        UIApplication.sharedApplication().statusBarStyle = .LightContent;
+            // UIApplication.sharedApplication().statusBarStyle = .LightContent
         return true
     }
 
@@ -36,8 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        
-        NSNotificationCenter.defaultCenter().postNotificationName("ReturnToSplash", object: nil);
+
+        NSNotificationCenter.defaultCenter().postNotificationName(AppInfo.notifications.ReturnToSplash, object: nil)
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -49,61 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        TwitterClient.sharedInstance.handleOpenUrl(url)
+        return true
+    }
 
-        TwitterClient.sharedInstance.handleOpenUrl(url);
-        
-        return true;
-    }
-    
-    func switchToProfileTab(reloadUserProfile: Bool = false) {
-        if(reloadUserProfile) {
-            delay(1.0, closure: { () -> () in
-                let pnVc = self.tabBarController?.childViewControllers.last as! UINavigationController;
-                let pVc = pnVc.viewControllers.first as! ProfileViewController;
-                pVc.reloadData();
-            });
-        }
-        
-        if tabBarController != nil {
-            if(tabBarController!.selectedIndex != 3) {
-                tabBarController!.selectedIndex = 3
-            }
-        }
-    }
-    
-    func openTweetDetails(tweet: Tweet) {
-        let storyboard = UIStoryboard(name: "Main", bundle:nil);
-        let vc = storyboard.instantiateViewControllerWithIdentifier("DetailsViewController") as! DetailsViewController;
-        vc.tweet = tweet;
-        self.window?.rootViewController!.presentedViewController!.presentViewController(vc, animated:true, completion:nil);
-    }
-    
-}
-
-extension String
-{
-    func replace(target: String, withString: String) -> String
-    {
-        return self.stringByReplacingOccurrencesOfString(target, withString: withString, options: NSStringCompareOptions.LiteralSearch, range: nil)
-    }
-}
-
-
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
-    
-    
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        //
-    });
-    
-    dispatch_async(dispatch_get_main_queue()) { () -> Void in
-        //
-    }
-    
 }

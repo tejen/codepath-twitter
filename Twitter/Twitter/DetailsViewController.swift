@@ -8,143 +8,103 @@
 
 import UIKit
 
-class DetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetTableViewDelegate {
-    
-    var rootTweetID: NSNumber?;
-    
-    var tweet: Tweet?;
-    var closeNavBarOnDisappear = false;
-    
-    var tweetChain = [Tweet]();
-    var chainIsPopulated = false {
+final class DetailsViewController: TweetTableViewController {
+
+    // MARK: - Properties
+
+    // MARK: Public Properties
+    var tweet: Tweet?
+    var closeNavBarOnDisappear = false
+
+    // MARK: Private Properties
+    private var rootTweetID: NSNumber?
+
+    private var tweetChain = [Tweet]()
+    private var chainIsPopulated = false {
         didSet {
-            if(tweetChain.count > 1) {
-                self.title = "Conversation";
+            if tweetChain.count > 1 {
+                self.title = "Conversation"
             } else {
-                self.title = "Tweet";
+                self.title = "Tweet"
             }
         }
-    };
-    
-    var tweetComposedReply: Tweet?;
-    
-    var lastIndexPath: NSIndexPath?;
+    }
 
-    @IBOutlet var tableView: UITableView!
-    
+    private var tweetComposedReply: Tweet?
+
+    private var lastIndexPath: NSIndexPath?
+
+    // MARK: - IBOutlets
+    @IBOutlet var tableViewOutlet: UITableView! {
+        didSet {
+            tableView = tableViewOutlet
+        }
+    }
+
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        tableView.delegate = self;
-        tableView.dataSource = self;
-        tableView.rowHeight = UITableViewAutomaticDimension;
-        tableView.estimatedRowHeight = 160.0;
-        
-        rootTweetID = tweet!.TweetID;
-        
-        NSNotificationCenter.defaultCenter().addObserverForName("DetailsTweetChainReady", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-            while(self.tweet != nil) {
-                self.tweetChain.insert(self.tweet!, atIndex: 0);
-                self.tweet = self.tweet!.precedingTweet;
-            }
-            self.chainIsPopulated = true;
-            self.tableView.reloadData();
-        };
-        
-        TwitterClient.sharedInstance.populatePreviousTweets(tweet!, completion: { () -> (Void) in
-                NSNotificationCenter.defaultCenter().postNotificationName("DetailsTweetChainReady", object: nil);
-            }
-        );
-        
-        self.navigationController?.navigationBarHidden = false;
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated);
-        if(closeNavBarOnDisappear) {
-            self.navigationController?.navigationBarHidden = true;
-        }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated);
-        
-        tableViewScrollToBottom(true);
-    }
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 160.0
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(chainIsPopulated == true) {
-            return tweetChain.count;
-        }
-        
-        return 0;
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellTweet = tweetChain[indexPath.row];
-        if(cellTweet.TweetID == rootTweetID) {
-            let cell = tableView.dequeueReusableCellWithIdentifier("TweetExpandedCell", forIndexPath: indexPath) as! TweetExtendedCell;
-            cell.indexPath = indexPath;
-            cell.tweet = cellTweet;
-            cell.delegate = self;
-            lastIndexPath = indexPath;
-            return cell;
-        } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("TweetCompactCell", forIndexPath: indexPath) as! TweetCompactCell;
-            cell.indexPath = indexPath;
-            cell.tweet = cellTweet;
-            cell.delegate = self;
-            return cell;
-        }
-    }
-    
-    var reloadedIndexPaths = [Int]();
-    
-    func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath) {
-        if(reloadedIndexPaths.indexOf(indexPath.row) == nil) {
-            reloadedIndexPaths.append(indexPath.row);
-            try! tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic);
-        }
-    }
-    
-    func openProfile(userScreenname: NSString){
-        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle());
-        let vc = storyboard.instantiateViewControllerWithIdentifier("ProfileViewNavigationController") as! UINavigationController;
-        let pVc = vc.viewControllers.first as! ProfileViewController;
-        pVc.userScreenname = userScreenname;
-        self.presentViewController(vc, animated: true, completion: nil);
-    }
-    
-    func openCompose(vc: UIViewController) {
-        self.presentViewController(vc, animated: true, completion: nil);
-    }
-    
-    func tableViewScrollToBottom(animated: Bool) {
-        
-        let delay = 0.1 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        
-        dispatch_after(time, dispatch_get_main_queue(), {
-            
-            let numberOfSections = self.tableView.numberOfSections
-            let numberOfRows = self.tableView.numberOfRowsInSection(numberOfSections-1)
-            
-            if numberOfRows > 1 {
-                let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
-                self.tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated);
-                self.tableView.cellForRowAtIndexPath(indexPath)?.layer.backgroundColor = UIColor(red: 1.0, green: 241/255.0, blue: 156/255.0, alpha: 1).CGColor;
-                UIView.animateWithDuration(2, animations: { () -> Void in
-                    self.tableView.cellForRowAtIndexPath(indexPath)?.layer.backgroundColor = UIColor.clearColor().CGColor;
-                });
+        rootTweetID = tweet!.TweetID
+
+        NSNotificationCenter.defaultCenter().addObserverForName(AppInfo.notifications.DetailsTweetChainReady, object: nil, queue: NSOperationQueue.mainQueue()) { _ in
+            while(self.tweet != nil) {
+                self.tweetChain.insert(self.tweet!, atIndex: 0)
+                self.tweet = self.tweet!.precedingTweet
             }
-            
+            self.chainIsPopulated = true
+            self.tableView.reloadData()
+        }
+
+        TwitterClient.sharedInstance.populatePreviousTweets(tweet!, completion: { _ in
+            NSNotificationCenter.defaultCenter().postNotificationName(AppInfo.notifications.DetailsTweetChainReady, object: nil)
         })
     }
-    
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        if closeNavBarOnDisappear {
+            self.navigationController?.navigationBarHidden = true
+        }
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.navigationController?.navigationBarHidden = false
+        tableViewScrollToBottom(true)
+    }
+
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension DetailsViewController {
+
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return chainIsPopulated ? tweetChain.count : 0
+    }
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellTweet = tweetChain[indexPath.row]
+
+        var cellType = "TweetCompactCell"
+        if cellTweet.TweetID == rootTweetID {
+            cellType = "TweetExpandedCell"
+            lastIndexPath = indexPath
+        }
+
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellType, forIndexPath: indexPath) as! TweetCell
+        cell.indexPath = indexPath
+        cell.tweet = cellTweet
+        cell.delegate = self
+        return cell
+    }
+
 }

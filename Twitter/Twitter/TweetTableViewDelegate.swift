@@ -8,10 +8,12 @@
 
 import UIKit
 
-protocol TweetTableViewDelegate: class, UITableViewDelegate {
-    func reloadTableCellAtIndex(cell: UITableViewCell, indexPath: NSIndexPath);
-    
-    func openProfile(userScreenname: NSString);
-    
-    func openCompose(viewController: UIViewController);
+protocol TweetTableViewDelegate: class {
+
+    func reloadTableCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath)
+
+    func openProfile(userScreenname: NSString)
+
+    func openCompose(viewController: UIViewController)
+
 }
